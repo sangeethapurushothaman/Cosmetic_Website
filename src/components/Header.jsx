@@ -1,101 +1,143 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Search, Menu, X, User, Heart } from 'lucide-react';
+import React, { useState } from "react";
+import { ShoppingBag, Search, Menu, X, User, Heart } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState("Skincare");
 
   const navLinks = [
-    { name: 'Skincare', href: '#' },
-    { name: 'Makeup', href: '#' },
-    { name: 'Fragrance', href: '#' },
-    { name: 'Best Sellers', href: '#' },
-    { name: 'Our Story', href: '#' },
+    { name: "Skincare" },
+    { name: "Makeup" },
+    { name: "Fragrance" },
+    { name: "Best Sellers" },
+    { name: "Our Story" }
   ];
 
   return (
-    <nav className="relative bg-white border-b border-stone-100 font-sans">
-      {/* Top Utility Bar (Optional) */}
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-stone-200">
+
+      {/* Top Bar */}
       <div className="bg-stone-50 py-2 text-center text-xs tracking-widest uppercase text-stone-600">
         Free shipping on orders over $50
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          
+      <div className="max-w-7xl mx-auto px-6">
+
+        <div className="flex items-center justify-between h-20">
+
           {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-stone-600 hover:text-black focus:outline-none"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          <button
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
 
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <h1 className="text-2xl font-serif tracking-tighter cursor-pointer">
-              LUMIÈRE <span className="text-[10px] tracking-widest block -mt-1 text-stone-400">BEAUTÉ</span>
+          {/* Logo Animation */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="cursor-pointer"
+          >
+            <h1 className="text-2xl font-serif tracking-tight">
+              LUMIÈRE
+              <span className="block text-[10px] tracking-widest text-stone-400 -mt-1">
+                BEAUTÉ
+              </span>
             </h1>
-          </div>
+          </motion.div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8 items-center">
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-10 relative">
+
             {navLinks.map((link) => (
-              <a
+              <button
                 key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-stone-600 hover:text-black transition-colors duration-200"
+                onClick={() => setActive(link.name)}
+                className="relative text-sm font-medium text-stone-600 hover:text-black transition"
               >
                 {link.name}
-              </a>
+
+                {active === link.name && (
+                  <motion.div
+                    layoutId="underline"
+                    className="absolute left-0 right-0 -bottom-2 h-[2px] bg-black"
+                  />
+                )}
+              </button>
             ))}
+
           </div>
 
-          {/* Icons/Actions */}
-          <div className="flex items-center space-x-4 lg:space-x-6">
-            <button className="text-stone-600 hover:text-black hidden sm:block">
-              <Search size={20} strokeWidth={1.5} />
-            </button>
-            <button className="text-stone-600 hover:text-black">
-              <User size={20} strokeWidth={1.5} />
-            </button>
-            <button className="text-stone-600 hover:text-black hidden sm:block">
-              <Heart size={20} strokeWidth={1.5} />
-            </button>
-            <button className="text-stone-600 hover:text-black relative">
-              <ShoppingBag size={20} strokeWidth={1.5} />
-              <span className="absolute -top-1 -right-1 bg-stone-800 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
+          {/* Icons */}
+          <div className="flex items-center space-x-6">
+
+            <motion.button whileHover={{ scale: 1.2 }}>
+              <Search size={20} />
+            </motion.button>
+
+            <motion.button whileHover={{ scale: 1.2 }}>
+              <User size={20} />
+            </motion.button>
+
+            <motion.button whileHover={{ scale: 1.2 }} className="hidden sm:block">
+              <Heart size={20} />
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.2 }}
+              className="relative"
+            >
+              <ShoppingBag size={20} />
+              <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
                 0
               </span>
-            </button>
+            </motion.button>
+
           </div>
+
         </div>
+
       </div>
 
-      {/* Mobile Menu Overlay */}
-      <div 
-        className={`md:hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-screen opacity-100 py-4' : 'max-h-0 opacity-0 overflow-hidden'
-        } bg-white border-t border-stone-100`}
-      >
-        <div className="px-4 space-y-1">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="block px-3 py-4 text-base font-medium text-stone-700 border-b border-stone-50"
-            >
-              {link.name}
-            </a>
-          ))}
-          <div className="pt-4 flex justify-around text-stone-500">
-             <Search size={20} />
-             <Heart size={20} />
-          </div>
-        </div>
-      </div>
-    </nav>
+      {/* Mobile Menu Animation */}
+      <AnimatePresence>
+
+        {isOpen && (
+
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden bg-white border-t"
+          >
+
+            <div className="flex flex-col p-6 space-y-6">
+
+              {navLinks.map((link) => (
+                <motion.button
+                  key={link.name}
+                  whileHover={{ x: 10 }}
+                  onClick={() => {
+                    setActive(link.name);
+                    setIsOpen(false);
+                  }}
+                  className="text-lg text-left text-stone-700"
+                >
+                  {link.name}
+                </motion.button>
+              ))}
+
+            </div>
+
+          </motion.div>
+
+        )}
+
+      </AnimatePresence>
+
+    </header>
   );
 };
 
